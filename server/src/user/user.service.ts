@@ -10,22 +10,24 @@ export class UserService {
   constructor(@InjectModel('User') private userModel: Model<UserDocument>){}
 
   create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    const user = new this.userModel(createUserDto);
+    user.save();
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll() {
+    return await this.userModel.find({});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return await this.userModel.findById(id);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(id: string, updateUserDto: UpdateUserDto) {
+    this.userModel.findByIdAndUpdate(id, updateUserDto, {new: true}).exec();
+    
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string) {
+    this.userModel.findByIdAndDelete(id).exec();
   }
 }
