@@ -22,9 +22,17 @@ export class UserService {
     return await this.userModel.findById(id);
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    this.userModel.findByIdAndUpdate(id, updateUserDto, {new: true}).exec();
-    
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    // this.userModel.findByIdAndUpdate(id, updateUserDto, {new: true}).exec();
+    const user = await this.userModel.findById(id);
+    user.set({
+      ...updateUserDto,
+      address: {
+        ...user.address,
+        ...updateUserDto.address
+      }
+    })
+    user.save();
   }
 
   remove(id: string) {
